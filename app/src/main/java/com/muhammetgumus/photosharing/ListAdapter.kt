@@ -20,6 +20,8 @@ class ListAdapter(val ListeList: ArrayList<Post>) : RecyclerView.Adapter<ListAda
 
 
 
+    
+
     // 2. onCreateViewHolder: Her bir satırın layout'unu (recycler_row.xml) bağlar.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
         val binding = RecyclerRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
