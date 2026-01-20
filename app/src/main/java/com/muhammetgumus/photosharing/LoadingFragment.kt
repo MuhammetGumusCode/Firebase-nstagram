@@ -101,7 +101,7 @@ class LoadingFragment : Fragment() {
                 // veri tabanına yazmamız lazım
 
                val postmap = hashMapOf<String, Any>()
-                 postmap.put("DowloandUrı",downloadUrl)
+                 postmap.put("DowloandUrı", downloadUrl)
                  postmap.put("userEmail",auth.currentUser!!.email.toString())
                  postmap.put("comment",binding.CommentText.text.toString())
                  postmap.put("date", Timestamp.now())

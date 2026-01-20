@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
+import com.muhammetgumus.kotlincookbook.adapter.ListAdapter
 import com.muhammetgumus.photosharing.databinding.FragmentFeedBinding
 
 class FeedFragment : Fragment() , PopupMenu.OnMenuItemClickListener {
@@ -26,6 +28,11 @@ class FeedFragment : Fragment() , PopupMenu.OnMenuItemClickListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestoredb : FirebaseFirestore
+
+    private var Postlist = ArrayList<Post>()
+
+    private lateinit var adapter : ListAdapter
+
 
 
 
@@ -48,12 +55,23 @@ class FeedFragment : Fragment() , PopupMenu.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding.floatingActionButton.setOnClickListener { FloatingButtonClicked(it) }
          firestoreverial()
+
+        adapter = ListAdapter(Postlist)
+        binding.recyclorRow.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclorRow.adapter = adapter
+
+
+
+
+
+
     }
 
 
     private fun firestoreverial() {
 
-     firestoredb.collection("Posts").addSnapshotListener { value, error ->
+      Postlist.clear()
+     firestoredb.collection("Posts").orderBy("date", Query.Direction.DESCENDING).addSnapshotListener { value, error ->
           if (error!=null) {
               Toast.makeText(requireContext(),error.localizedMessage,Toast.LENGTH_LONG) .show()
                }
@@ -64,10 +82,19 @@ class FeedFragment : Fragment() , PopupMenu.OnMenuItemClickListener {
              val documents = value.documents
 
                 for (document in documents) {
-                   val comment = document.get("comment") as String //casting
-                   println(comment)
+                    val comment = document.get("comment") as String //casting
+                 val userEmail = document.get("userEmail") as String
+                 val downloadUrl = document.get("DowloandUrı") as String
+
+
+                    val post = Post(comment,userEmail,downloadUrl)
+                    Postlist.add(post)
+
 
                 }
+
+                    adapter.notifyDataSetChanged()
+
                 }
 
          }
